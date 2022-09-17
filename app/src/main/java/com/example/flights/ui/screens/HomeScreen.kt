@@ -70,8 +70,8 @@ fun HomeCard(){
                 Text(text = "xx:xx")
             }
             Text(
-                text = "xx€",
-                fontSize = MaterialTheme.typography.h4.fontSize,
+                text = "xx,xx€",
+                fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )
         }
