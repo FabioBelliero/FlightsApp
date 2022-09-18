@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "flights")
 class Flight(
     @PrimaryKey var id: String,
-    @ColumnInfo var date: String,
 
     @ColumnInfo var flyFrom: String,
     @ColumnInfo var flyTo: String,

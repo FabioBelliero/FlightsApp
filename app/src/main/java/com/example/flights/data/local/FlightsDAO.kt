@@ -16,4 +16,7 @@ interface FlightsDAO {
 
     @Query("DELETE FROM flights")
     fun deleteAll()
+
+    @Query("SELECT * FROM flights")
+    fun getAll(): List<Flight>
 }

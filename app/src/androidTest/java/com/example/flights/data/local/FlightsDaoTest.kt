@@ -35,7 +35,7 @@ class FlightsDaoTest {
 
     @Test
     fun insertFlight() = runTest {
-        val flight = Flight("1", "", "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, "", "", 0.0, 0.0, 0.0, 0,0,0,0,0,0,0,0)
+        val flight = Flight("1",  "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, "", "", 0.0, 0.0, 0.0, 0,0,0,0,0,0,0,0)
         dao.insertFlight(flight)
 
         val result = dao.exists("1")
@@ -45,7 +45,7 @@ class FlightsDaoTest {
 
     @Test
     fun deleteAllElements() = runTest {
-        val flight = Flight("1", "", "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, "", "", 0.0, 0.0, 0.0, 0,0,0,0,0,0,0,0)
+        val flight = Flight("1",  "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, "", "", 0.0, 0.0, 0.0, 0,0,0,0,0,0,0,0)
         dao.insertFlight(flight)
 
         dao.deleteAll()
@@ -53,4 +53,22 @@ class FlightsDaoTest {
         val result = dao.exists("1")
         assertThat(result).isFalse()
     }
+
+    @Test
+    fun getAllIfEmpty() = runTest {
+        val result = dao.getAll()
+
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun getAllNotEmpty() = runTest {
+        val flight = Flight("1",  "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, "", "", 0.0, 0.0, 0.0, 0,0,0,0,0,0,0,0)
+        dao.insertFlight(flight)
+
+        val result = dao.getAll()
+
+        assertThat(result).isNotEmpty()
+    }
+
 }
