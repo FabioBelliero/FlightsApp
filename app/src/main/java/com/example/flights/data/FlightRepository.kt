@@ -1,7 +1,6 @@
 package com.example.flights.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import android.util.Log
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDAO
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,33 +11,44 @@ import org.json.JSONArray
 import java.time.LocalDate
 import kotlin.random.Random
 
-@RequiresApi(Build.VERSION_CODES.O)
 class FlightRepository(
     private val dao: FlightsDAO,
     private val apiSource: ApiDataSource,
     private val date: String
 ) : VolleyCallback{
 
+    private var ids = mutableListOf<String>()
+
     private val _stateFlow = MutableStateFlow(emptyList<Flight>())
     val flightsStateFlow = _stateFlow.asStateFlow()
 
-    fun checkIfNewDay() {
+    suspend fun checkIfNewDay(){
 
-        if (dao.getAll().isEmpty() || LocalDate.now().toString() != date){
-            val flights = apiSource.getFlightsList(this)
+        getIds(dao.getAll())
+
+        if (ids.isEmpty() || LocalDate.now().toString() != date){
+            Log.d("FlightRepository", "New day")
+            apiSource.getFlightsList(this)
         } else{
+            Log.d("FlightRepository", "Same day")
             getCurrentFlights()
         }
     }
 
-    override fun onSuccess(flightList: JSONArray) {
+    private fun getIds(flights: List<Flight>) {
+        flights.forEach{
+            ids.add(it.id)
+        }
+    }
+
+    override fun onSuccess(flightList: JSONArray){
         val validFlights = mutableListOf<Flight>()
 
         while (validFlights.size < 5 && flightList.length() > 0) {
             val rand = Random.nextInt(flightList.length())
             val randFlight = flightList.getJSONObject(rand)
 
-            if (dao.exists(randFlight.getJSONObject("id").toString())) {
+            if (ids.contains(randFlight.getString("id"))) {
                 flightList.remove(rand)
             } else {
                 var f = Flight(
@@ -56,19 +66,9 @@ class FlightRepository(
                     randFlight.getDouble("price"),
                     randFlight.getJSONObject("availability").getInt("seats"),
                     randFlight.getJSONArray("airlines").getString(0),
-                    randFlight.getString("deep_link"),
-                    randFlight.getJSONObject("bag_price").getDouble("1"),
-                    randFlight.getJSONObject("bag_price").getDouble("2"),
-                    randFlight.getJSONObject("bag_price").getDouble("hand"),
-                    randFlight.getJSONObject("baglimit").getInt("hand_width"),
-                    randFlight.getJSONObject("baglimit").getInt("hand_height"),
-                    randFlight.getJSONObject("baglimit").getInt("hand_length"),
-                    randFlight.getJSONObject("baglimit").getInt("hand_weight"),
-                    randFlight.getJSONObject("baglimit").getInt("hold_width"),
-                    randFlight.getJSONObject("baglimit").getInt("hold_height"),
-                    randFlight.getJSONObject("baglimit").getInt("hold_length"),
-                    randFlight.getJSONObject("baglimit").getInt("hold_weight")
+                    randFlight.getString("deep_link")
                 )
+                flightList.remove(rand)
 
                 validFlights.add(f)
             }
@@ -76,23 +76,38 @@ class FlightRepository(
 
         _stateFlow.value = validFlights
 
-        dao.deleteAll()
-        validFlights.forEach{
-            insertFlightInDB(it)
-        }
+        newFlightsInDB(validFlights)
+
     }
 
-    private fun insertFlightInDB(flight: Flight) = runBlocking {
-        launch { dao.insertFlight(flight) }
+    private fun newFlightsInDB(flights: List<Flight>) = runBlocking {
+        launch {
+            dao.deleteAll()
+            ids = mutableListOf()
+            flights.forEach{
+                dao.insertFlight(it)
+                ids.add(it.id)
+            }
+        }
     }
 
     override fun onError() {
         getCurrentFlights()
     }
 
-    private fun getCurrentFlights(){
-        val flights = dao.getAll()
-        _stateFlow.value = flights
+    private fun getCurrentFlights() = runBlocking {
+        launch {
+            val flights = dao.getAll()
+            _stateFlow.value = flights
+        }
     }
 
+    }
+
+
+
+//Interface to get the result from the volley call
+interface VolleyCallback {
+    fun onSuccess(flightList: JSONArray)
+    fun onError()
 }

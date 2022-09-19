@@ -20,19 +20,7 @@ class Flight(
     @ColumnInfo var distance: Double,
     @ColumnInfo var duration: String,
     @ColumnInfo var price: Double,
-    @ColumnInfo var availabilty: Int,
+    @ColumnInfo var availabilty: Int?,
     @ColumnInfo var airline: String,
     @ColumnInfo var link: String,
-
-    @ColumnInfo var bagPrice1: Double,
-    @ColumnInfo var bagPrice2: Double,
-    @ColumnInfo var handPrice: Double,
-    @ColumnInfo var handWidth: Int,
-    @ColumnInfo var handHeight: Int,
-    @ColumnInfo var handLength: Int,
-    @ColumnInfo var handWeight: Int,
-    @ColumnInfo var holdWidth: Int,
-    @ColumnInfo var holdHeight: Int,
-    @ColumnInfo var holdLength: Int,
-    @ColumnInfo var holdWeight: Int
 ){}

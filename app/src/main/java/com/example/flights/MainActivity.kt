@@ -1,17 +1,42 @@
 package com.example.flights
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.flights.data.ApiDataSource
+import com.example.flights.data.FlightRepository
+import com.example.flights.data.local.FlightsDB
 import com.example.flights.ui.screens.Navigation
 import com.example.flights.ui.theme.FlightsTheme
+import com.example.flights.vm.MainViewModel
+import java.time.LocalDate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //check date
+        val sharedPreferences : SharedPreferences = this.getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
+        val savedDate = sharedPreferences.getString("date", "")
+
+        val editor: SharedPreferences.Editor = sharedPreferences.edit()
+        editor.putString("date", LocalDate.now().toString())
+        editor.apply()
+
+        //create viewmodel
+        var viewModel = MainViewModel(
+            FlightRepository(
+                FlightsDB.getDB(this).flightDao(),
+                ApiDataSource(this),
+                savedDate.toString()
+            )
+        )
+
         setContent {
             FlightsTheme {
-                Navigation()
+                Navigation(viewModel)
             }
         }
     }

@@ -3,19 +3,44 @@ package com.example.flights.ui.screens
 import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
+import com.example.flights.data.FlightRepository
+import com.example.flights.data.local.Flight
+import com.example.flights.data.local.FlightsDB
 import com.example.flights.ui.theme.FlightsTheme
+import com.example.flights.vm.MainViewModel
+
+private lateinit var vm: MainViewModel
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: MainViewModel) {
+
+    vm = viewModel
+    
+    vm.getFlights()
+    
+    HomeContent()
+}
+
+@Composable
+fun HomeContent(){
+    val state by vm.state.collectAsState()
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -23,21 +48,21 @@ fun HomeScreen() {
             )
         },
     ) { paddingValues ->
-        Column(modifier = Modifier
+        LazyColumn(modifier = Modifier
             .padding(paddingValues)
-            .verticalScroll(rememberScrollState())
         ){
-            HomeCard()
-            HomeCard()
-            HomeCard()
-            HomeCard()
-            HomeCard()
+            items(
+                state.flightList
+            ){
+                HomeCard(flight = it)
+            }
+            
         }
     }
 }
 
 @Composable
-fun HomeCard(){
+fun HomeCard(flight: Flight){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -54,23 +79,23 @@ fun HomeCard(){
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "From")
+                Text(text = flight.flyFrom)
                 Text(text = "xx:xx")
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = "->")
-                Text(text = "x h xx m")
+                Text(text = flight.duration)
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "To")
+                Text(text = flight.flyTo)
                 Text(text = "xx:xx")
             }
             Text(
-                text = "xx,xx€",
+                text = "${flight.price}€",
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )
@@ -83,6 +108,6 @@ fun HomeCard(){
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "dark")
 fun HomeScreenPreview(){
     FlightsTheme {
-        HomeScreen()
+        HomeContent()
     }
 }
