@@ -21,6 +21,6 @@ class Flight(
     @ColumnInfo var duration: String,
     @ColumnInfo var price: Double,
     @ColumnInfo var availabilty: Int?,
-    @ColumnInfo var airline: String,
+    @ColumnInfo var route: Int,
     @ColumnInfo var link: String,
 ){}

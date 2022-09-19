@@ -65,7 +65,7 @@ class FlightRepository(
                     randFlight.getString("fly_duration"),
                     randFlight.getDouble("price"),
                     randFlight.getJSONObject("availability").getInt("seats"),
-                    randFlight.getJSONArray("airlines").getString(0),
+                    randFlight.getJSONArray("route").length(),
                     randFlight.getString("deep_link")
                 )
                 flightList.remove(rand)

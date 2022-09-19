@@ -9,16 +9,21 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AirplanemodeActive
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import com.example.flights.R
 import com.example.flights.data.FlightRepository
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDB
@@ -86,7 +91,26 @@ fun HomeCard(flight: Flight){
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text(text = "->")
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    if (flight.route == 1){
+                        Text(text = "- ", fontWeight = FontWeight.Bold)
+                    } else {
+                        Text(text = "- ${flight.route} ", fontWeight = FontWeight.Bold)
+                    }
+
+                    val angle = 90
+                    Icon(
+                        imageVector = Icons.Default.AirplanemodeActive,
+                        contentDescription = null,
+                        modifier = Modifier.rotate(angle.toFloat())
+                    )
+
+                    Text(text = " ->", fontWeight = FontWeight.Bold)
+
+                }
+
                 Text(text = flight.duration)
             }
             Column(
