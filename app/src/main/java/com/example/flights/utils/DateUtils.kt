@@ -1,16 +1,19 @@
 package com.example.flights.utils
 
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
+
+import java.text.SimpleDateFormat
+
 
 object DateUtils {
 
-    fun intToDate(value: Int): String{
-        val instant = Instant.ofEpochSecond(value.toLong())
-        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+    fun getDate(value: Int): String{
 
-        return instant.atZone(ZoneId.systemDefault().normalized()).format(formatter)
+        return SimpleDateFormat("dd/MM").format(value.toLong()*1000)
+    }
+
+    fun getHour(value: Int): String{
+
+        return SimpleDateFormat("HH:mm").format(value.toLong()*1000)
     }
 
 

@@ -43,10 +43,11 @@ class FlightRepository(
 
     override fun onSuccess(flightList: JSONArray){
         val validFlights = mutableListOf<Flight>()
+        var rand: Int
 
         while (validFlights.size < 5 && flightList.length() > 0) {
-            val rand = Random.nextInt(flightList.length())
-            val randFlight = flightList.getJSONObject(rand)
+            rand = Random.nextInt(flightList.length())
+            var randFlight = flightList.getJSONObject(rand)
 
             if (ids.contains(randFlight.getString("id"))) {
                 flightList.remove(rand)
