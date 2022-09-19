@@ -23,6 +23,7 @@ import com.example.flights.data.FlightRepository
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDB
 import com.example.flights.ui.theme.FlightsTheme
+import com.example.flights.utils.DateUtils
 import com.example.flights.vm.MainViewModel
 
 private lateinit var vm: MainViewModel
@@ -80,7 +81,7 @@ fun HomeCard(flight: Flight){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = flight.flyFrom)
-                Text(text = "xx:xx")
+                Text(text = DateUtils.intToDate(flight.departureTime))
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -92,10 +93,10 @@ fun HomeCard(flight: Flight){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = flight.flyTo)
-                Text(text = "xx:xx")
+                Text(text = DateUtils.intToDate(flight.arrivalTime))
             }
             Text(
-                text = "${flight.price}€",
+                text = "${flight.price.toInt()}€",
                 fontSize = MaterialTheme.typography.h5.fontSize,
                 fontWeight = FontWeight.Bold
             )
