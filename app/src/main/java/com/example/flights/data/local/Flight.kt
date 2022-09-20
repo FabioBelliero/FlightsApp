@@ -14,6 +14,8 @@ class Flight(
     @ColumnInfo var cityTo: String,
     @ColumnInfo var countryFrom: String,
     @ColumnInfo var countryTo: String,
+    @ColumnInfo var countryCodeFrom: String,
+    @ColumnInfo var countryCodeTo: String,
 
     @ColumnInfo var departureTime: Int,
     @ColumnInfo var arrivalTime: Int,

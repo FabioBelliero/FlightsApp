@@ -46,7 +46,7 @@ class FlightRepository(
         var rand: Int
 
         while (validFlights.size < 5 && flightList.length() > 0) {
-            rand = Random.nextInt(flightList.length())
+            rand = Random.nextInt(0, flightList.length())
             var randFlight = flightList.getJSONObject(rand)
 
             if (ids.contains(randFlight.getString("id"))) {
@@ -60,6 +60,8 @@ class FlightRepository(
                     randFlight.getString("cityTo"),
                     randFlight.getJSONObject("countryFrom").getString("name"),
                     randFlight.getJSONObject("countryTo").getString("name"),
+                    randFlight.getJSONObject("countryFrom").getString("code"),
+                    randFlight.getJSONObject("countryTo").getString("code"),
                     randFlight.getInt("dTimeUTC"),
                     randFlight.getInt("aTimeUTC"),
                     randFlight.getDouble("distance"),

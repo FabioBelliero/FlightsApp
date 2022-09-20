@@ -93,8 +93,8 @@ fun HomeCard(flight: Flight){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = flight.flyFrom, fontWeight = FontWeight.Bold)
-                Text(text = DateUtils.getHour(flight.departureTime))
-                Text(text = DateUtils.getDate(flight.departureTime))
+                Text(text = DateUtils.getHour(flight.departureTime, flight.countryCodeFrom, flight.cityFrom))
+                Text(text = DateUtils.getDate(flight.departureTime, flight.countryCodeFrom, flight.cityFrom))
             }
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -125,8 +125,8 @@ fun HomeCard(flight: Flight){
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(text = flight.flyTo, fontWeight = FontWeight.Bold)
-                Text(text = DateUtils.getHour(flight.arrivalTime))
-                Text(text = DateUtils.getDate(flight.arrivalTime))
+                Text(text = DateUtils.getHour(flight.arrivalTime, flight.countryCodeTo, flight.cityTo))
+                Text(text = DateUtils.getDate(flight.arrivalTime, flight.countryCodeTo, flight.cityTo))
             }
             Text(
                 text = "${flight.price.toInt()}€",

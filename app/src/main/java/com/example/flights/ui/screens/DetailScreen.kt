@@ -129,13 +129,13 @@ fun FlightDetailsCard(flight: Flight){
                 thickness = 1.dp
             )
 
-            textWithIcon(text = " Departure: ","${DateUtils.getHour(flight.departureTime)} ${DateUtils.getDate(flight.departureTime)}",
+            textWithIcon(text = " Departure: ","${DateUtils.getHour(flight.departureTime, flight.countryCodeFrom, flight.cityFrom)} ${DateUtils.getDate(flight.departureTime, flight.countryCodeFrom, flight.cityFrom)}",
                 icon = Icons.Default.Today)
-            textWithIcon(text = " Arrival: ", "${DateUtils.getHour(flight.arrivalTime)} ${DateUtils.getDate(flight.arrivalTime)}",
+            textWithIcon(text = " Arrival: ", "${DateUtils.getHour(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)} ${DateUtils.getDate(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)}",
                 icon = Icons.Default.Event)
             textWithIcon(text = " Flights to destination: ", "${flight.route}",
                 icon = Icons.Default.ConnectingAirports)
-            textWithIcon(text = " Flight duration: ", "${flight.duration}",
+            textWithIcon(text = " Flight duration: ", flight.duration,
                 icon = Icons.Default.Schedule)
             textWithIcon(text = " Distance traveled: ", "${flight.distance}km",
                 icon = Icons.Default.Moving)
