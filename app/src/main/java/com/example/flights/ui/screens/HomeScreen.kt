@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
+import androidx.navigation.NavHostController
 import com.example.flights.R
 import com.example.flights.data.FlightRepository
 import com.example.flights.data.local.Flight
@@ -32,9 +33,14 @@ import com.example.flights.utils.DateUtils
 import com.example.flights.vm.MainViewModel
 
 private lateinit var vm: MainViewModel
+private lateinit var nav: NavHostController
 
 @Composable
-fun HomeScreen(viewModel: MainViewModel) {
+fun HomeScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel
+) {
+    nav = navController
 
     vm = viewModel
     
@@ -74,7 +80,8 @@ fun HomeCard(flight: Flight){
             .fillMaxWidth()
             .padding(15.dp)
             .clickable {
-                //TODO
+                vm.selected = flight
+                nav.navigate(Screen.Detail.route)
             },
         elevation = 10.dp
     ) {
