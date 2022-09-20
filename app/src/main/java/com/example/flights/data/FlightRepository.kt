@@ -11,6 +11,19 @@ import org.json.JSONArray
 import java.time.LocalDate
 import kotlin.random.Random
 
+/**
+ * Repository class
+ *
+ * It's connected to the Room Database and to the remote data source.
+ * It checks if it's a new date:
+ *
+ * if it is it calls the remote data source, gets the new flights and selects them  at random,
+ * checks them and when ready it sets the value of the StateFlow and updates the database;
+ *
+ * if it's the same day it retrieves the latest saved flights from the db and sets the
+ * value of the StateFlow.
+ */
+
 class FlightRepository(
     private val dao: FlightsDAO,
     private val apiSource: ApiDataSource,
@@ -47,12 +60,12 @@ class FlightRepository(
 
         while (validFlights.size < 5 && flightList.length() > 0) {
             rand = Random.nextInt(0, flightList.length())
-            var randFlight = flightList.getJSONObject(rand)
+            val randFlight = flightList.getJSONObject(rand)
 
             if (ids.contains(randFlight.getString("id"))) {
                 flightList.remove(rand)
             } else {
-                var f = Flight(
+                val f = Flight(
                     randFlight.getString("id"),
                     randFlight.getString("flyFrom"),
                     randFlight.getString("flyTo"),
@@ -72,11 +85,12 @@ class FlightRepository(
                     randFlight.getString("deep_link")
                 )
                 flightList.remove(rand)
-
+                Log.d("FlightRepository", "New flight: $f")
                 validFlights.add(f)
             }
         }
 
+        Log.d("FlightRepository", "Research done")
         _stateFlow.value = validFlights
 
         newFlightsInDB(validFlights)
@@ -105,7 +119,7 @@ class FlightRepository(
         }
     }
 
-    }
+}
 
 
 

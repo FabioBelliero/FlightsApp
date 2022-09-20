@@ -1,9 +1,7 @@
 package com.example.flights.data
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
@@ -11,6 +9,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.json.JSONArray
 
+/**
+ * Class to call the API
+ *
+ * It uses Volley to send a GET request for the JSONObject.
+ * If the response is positive it gets the data JSONArray and calls the success
+ * callback implemented in the repository, otherwise report the error and gets the
+ * saved flights in the Database.
+ */
 
 class ApiDataSource(private val context: Context) {
 

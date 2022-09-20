@@ -1,14 +1,14 @@
 package com.example.flights.utils
 
-
 import android.icu.util.TimeZone
-import android.util.Log
-import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.*
 
+/**
+ * This Object contains some useful function to convert the int
+ * value from the dTimeUTC and aTimeUTC into readable time/date format
+ */
 
 object DateUtils {
 
@@ -19,8 +19,6 @@ object DateUtils {
         val formatter = DateTimeFormatter.ofPattern("dd/MM")
 
         return instant.atZone(zoneId).format(formatter)
-
-        //return SimpleDateFormat("dd/MM").format((value+7200).toLong()*1000)
     }
 
     fun getHour(value: Int, countryCode: String, city: String): String{
@@ -30,8 +28,6 @@ object DateUtils {
         val formatter = DateTimeFormatter.ofPattern("HH:mm")
 
         return instant.atZone(zoneId).format(formatter)
-
-        //return SimpleDateFormat("HH:mm").format((value+7200).toLong()*1000)
     }
 
     private fun getZoneId(countryCode: String, city: String) : String{

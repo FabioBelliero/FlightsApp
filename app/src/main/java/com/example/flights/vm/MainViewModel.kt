@@ -10,6 +10,15 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * Main ViewModel
+ *
+ * This class stores data for the UI and calls the repository
+ * to get the flights data.
+ * It receives a StateFlow from the repository and presents a
+ * HomeScreenState to the UI
+ */
+
 class MainViewModel(
     private val repository: FlightRepository
 ) : ViewModel(){
@@ -31,6 +40,7 @@ class MainViewModel(
 
     fun getFlights() {
         viewModelScope.launch {
+            Log.d("MainViewModel", "Check if new day")
             repository.checkIfNewDay()
         }
     }

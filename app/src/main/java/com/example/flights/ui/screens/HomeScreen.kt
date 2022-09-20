@@ -1,13 +1,9 @@
 package com.example.flights.ui.screens
 
-import android.content.res.Configuration
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AirplanemodeActive
@@ -17,40 +13,37 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
-import com.example.flights.R
-import com.example.flights.data.FlightRepository
 import com.example.flights.data.local.Flight
-import com.example.flights.data.local.FlightsDB
-import com.example.flights.ui.theme.FlightsTheme
 import com.example.flights.utils.DateUtils
 import com.example.flights.vm.MainViewModel
 
+/**
+ * Composable function for the home screen
+ *
+ * It contains references to the main ViewModel and the NavHostController
+ * respectively to get the state of the flights and to navigate
+ */
+
 private lateinit var vm: MainViewModel
-private lateinit var nav: NavHostController
 
 @Composable
 fun HomeScreen(
     navController: NavHostController,
     viewModel: MainViewModel
 ) {
-    nav = navController
 
     vm = viewModel
     
     vm.getFlights()
     
-    HomeContent()
+    HomeContent(navController)
 }
 
 @Composable
-fun HomeContent(){
+fun HomeContent(nav: NavHostController){
     val state by vm.state.collectAsState()
 
     Scaffold(
@@ -66,7 +59,7 @@ fun HomeContent(){
             items(
                 state.flightList
             ){
-                HomeCard(flight = it)
+                HomeCard(flight = it, nav)
             }
             
         }
@@ -74,7 +67,7 @@ fun HomeContent(){
 }
 
 @Composable
-fun HomeCard(flight: Flight){
+fun HomeCard(flight: Flight, nav: NavHostController){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -134,14 +127,5 @@ fun HomeCard(flight: Flight){
                 fontWeight = FontWeight.Bold
             )
         }
-    }
-}
-
-@Composable
-@Preview(showBackground = true, name = "light")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "dark")
-fun HomeScreenPreview(){
-    FlightsTheme {
-        HomeContent()
     }
 }

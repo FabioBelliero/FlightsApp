@@ -13,11 +13,16 @@ import com.example.flights.ui.theme.FlightsTheme
 import com.example.flights.vm.MainViewModel
 import java.time.LocalDate
 
+/**
+ * MainActivity
+ *
+ * It retrieves the last saved date in a shared preference and passes it to the ViewModel
+ */
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //check date
         val sharedPreferences : SharedPreferences = this.getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
         val savedDate = sharedPreferences.getString("date", "")
 
@@ -25,8 +30,7 @@ class MainActivity : ComponentActivity() {
         editor.putString("date", LocalDate.now().toString())
         editor.apply()
 
-        //create viewmodel
-        var viewModel = MainViewModel(
+        val viewModel = MainViewModel(
             FlightRepository(
                 FlightsDB.getDB(this).flightDao(),
                 ApiDataSource(this),
