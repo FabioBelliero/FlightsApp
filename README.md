@@ -1,5 +1,6 @@
 # FlightsApp
 An Android demo application that shows 5 interesting flights to destinations you can visit with kiwi.com.
+It also shows the details of each flights and allow you to visit the official website to book the flight.
 
 ## Features
 - Local Database
