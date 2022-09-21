@@ -2,6 +2,8 @@
 An Android demo application that shows 5 interesting flights to destinations you can visit with kiwi.com.
 It also shows the details of each flights and allow you to visit the official website to book the flight.
 
+N.B. This branch is used to save some extra features done after the submition of the app.
+
 ## Features
 - Local Database
 - API Calls
@@ -13,6 +15,12 @@ It also shows the details of each flights and allow you to visit the official we
 - Volley (API calls)
 - Thruth (Testing)
 - Jetpack Compose
+
+- Gson
+- Coil compose
+
+## Differences
+- Added airlines images in the detail screen
 
 ## Setup applications
 1. Download and install Android Studio
