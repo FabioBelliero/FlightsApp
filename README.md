@@ -14,6 +14,9 @@ It also shows the details of each flights and allow you to visit the official we
 - Thruth (Testing)
 - Jetpack Compose
 
+## Differences
+- Added airlines images in the detail screen
+
 ## Setup applications
 1. Download and install Android Studio
 2. Download / clone this repository to a folder on your computer. `https://github.com/FabioBelliero/FlightsApp.git`
