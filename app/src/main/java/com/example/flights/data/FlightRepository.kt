@@ -56,7 +56,11 @@ class FlightRepository(
         }
     }
 
-    override suspend fun onSuccess(flightList: JSONArray){
+    override fun onSuccess(flightList: JSONArray) = runBlocking {
+        getValidFlights(flightList)
+    }
+
+    private suspend fun getValidFlights(flightList: JSONArray){
         val validFlights = mutableListOf<Flight>()
         var rand: Int
 
@@ -106,7 +110,6 @@ class FlightRepository(
         _stateFlow.value = validFlights
 
         newFlightsInDB(validFlights)
-
     }
 
     private suspend fun newFlightsInDB(flights: List<Flight>) = coroutineScope {
@@ -137,6 +140,6 @@ class FlightRepository(
 
 //Interface to get the result from the volley call
 interface VolleyCallback {
-    suspend fun onSuccess(flightList: JSONArray)
+    fun onSuccess(flightList: JSONArray)
     fun onError()
 }
