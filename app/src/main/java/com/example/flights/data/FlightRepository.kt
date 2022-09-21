@@ -3,6 +3,7 @@ package com.example.flights.data
 import android.util.Log
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDAO
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -54,7 +55,7 @@ class FlightRepository(
         }
     }
 
-    override fun onSuccess(flightList: JSONArray){
+    override suspend fun onSuccess(flightList: JSONArray){
         val validFlights = mutableListOf<Flight>()
         var rand: Int
 
@@ -80,7 +81,7 @@ class FlightRepository(
                     randFlight.getDouble("distance"),
                     randFlight.getString("fly_duration"),
                     randFlight.getDouble("price"),
-                    randFlight.getJSONObject("availability").getInt("seats"),
+                    randFlight.getJSONObject("availability").optInt("seats", 0),
                     randFlight.getJSONArray("route").length(),
                     randFlight.getString("deep_link")
                 )
@@ -97,7 +98,7 @@ class FlightRepository(
 
     }
 
-    private fun newFlightsInDB(flights: List<Flight>) = runBlocking {
+    private suspend fun newFlightsInDB(flights: List<Flight>) = coroutineScope {
         launch {
             dao.deleteAll()
             ids = mutableListOf()
@@ -125,6 +126,6 @@ class FlightRepository(
 
 //Interface to get the result from the volley call
 interface VolleyCallback {
-    fun onSuccess(flightList: JSONArray)
+    suspend fun onSuccess(flightList: JSONArray)
     fun onError()
 }

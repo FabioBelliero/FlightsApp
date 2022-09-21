@@ -39,9 +39,11 @@ class MainViewModel(
     }
 
     fun getFlights() {
-        viewModelScope.launch {
-            Log.d("MainViewModel", "Check if new day")
-            repository.checkIfNewDay()
+        if(_state.value.flightList.isEmpty()) {
+            viewModelScope.launch {
+                Log.d("MainViewModel", "Check if new day")
+                repository.checkIfNewDay()
+            }
         }
     }
 

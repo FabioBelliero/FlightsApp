@@ -10,7 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 class TestCallback(): VolleyCallback{
-    override fun onSuccess(flightList: JSONArray) {
+    override suspend fun onSuccess(flightList: JSONArray) {
         assertThat(flightList).isNotNull()
     }
 
