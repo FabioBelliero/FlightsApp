@@ -2,7 +2,7 @@
 An Android demo application that shows 5 interesting flights to destinations you can visit with kiwi.com.
 It also shows the details of each flights and allow you to visit the official website to book the flight.
 
-This branch is used to save some extra features done after the submition of the app.
+N.B. This branch is used to save some extra features done after the submition of the app.
 
 ## Features
 - Local Database
