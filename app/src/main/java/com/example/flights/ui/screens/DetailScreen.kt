@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.*
@@ -129,7 +130,8 @@ fun FlightDetailsCard(flight: Flight){
                 model = "https://images.kiwi.com/photos/600x330/${flight.destinationId}.jpg",
                 contentDescription = null,
                 loading = { CircularProgressIndicator() },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
             )
 
             Divider(
@@ -168,7 +170,8 @@ fun FlightDetailsCard(flight: Flight){
                         model = "https://images.kiwi.com/airlines/64x64/$it.png",
                         contentDescription = null,
                         loading = { CircularProgressIndicator() },
-                        modifier = Modifier.padding(horizontal = 10.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        contentScale = ContentScale.Crop
                     )
                 }
             }
