@@ -16,6 +16,9 @@ This branch is used to save some extra features done after the submition of the 
 - Thruth (Testing)
 - Jetpack Compose
 
+- Gson
+- Coil compose
+
 ## Differences
 - Added airlines images in the detail screen
 
