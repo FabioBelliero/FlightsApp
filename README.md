@@ -18,10 +18,12 @@ N.B. This branch is used to save some extra features done after the submition of
 
 - Gson
 - Coil compose
+- Accompanist
 
 ## Differences
 - Added airlines images in the detail screen
 - Added destination image in the detail screen
+- Added animation when going into the detail screen
 
 ## Setup applications
 1. Download and install Android Studio
