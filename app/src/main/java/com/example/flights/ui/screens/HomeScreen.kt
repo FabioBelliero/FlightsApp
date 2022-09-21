@@ -95,10 +95,10 @@ fun HomeCard(flight: Flight, nav: NavHostController){
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    if (flight.route == 1){
+                    if (flight.route.airlines.size == 1){
                         Text(text = "- ", fontWeight = FontWeight.Bold)
                     } else {
-                        Text(text = "- ${flight.route} ", fontWeight = FontWeight.Bold)
+                        Text(text = "- ${flight.route.airlines.size} ", fontWeight = FontWeight.Bold)
                     }
 
                     val angle = 90

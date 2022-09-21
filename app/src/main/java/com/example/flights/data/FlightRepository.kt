@@ -1,6 +1,7 @@
 package com.example.flights.data
 
 import android.util.Log
+import com.example.flights.data.local.Airlines
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDAO
 import kotlinx.coroutines.coroutineScope
@@ -66,6 +67,13 @@ class FlightRepository(
             if (ids.contains(randFlight.getString("id"))) {
                 flightList.remove(rand)
             } else {
+                //Branch change
+                val airlines = mutableListOf<String>()
+                val route = randFlight.getJSONArray("route")
+                for (i in 0 until route.length()){
+                    airlines.add(route.getJSONObject(i).getString("airline"))
+                }
+
                 val f = Flight(
                     randFlight.getString("id"),
                     randFlight.getString("flyFrom"),
@@ -82,7 +90,10 @@ class FlightRepository(
                     randFlight.getString("fly_duration"),
                     randFlight.getDouble("price"),
                     randFlight.getJSONObject("availability").optInt("seats", 0),
-                    randFlight.getJSONArray("route").length(),
+
+                    //Branch change
+                    Airlines(airlines),
+
                     randFlight.getString("deep_link")
                 )
                 flightList.remove(rand)

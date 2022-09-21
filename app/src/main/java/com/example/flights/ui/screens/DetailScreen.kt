@@ -1,8 +1,11 @@
 package com.example.flights.ui.screens
 
+import android.icu.number.Scale
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -11,11 +14,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.flights.data.local.Flight
 import com.example.flights.utils.DateUtils
 import com.example.flights.vm.MainViewModel
@@ -87,7 +93,9 @@ fun DetailContent(nav: NavHostController){
                 
                 Button(
                     onClick = { handler.openUri(flight.link) },
-                    modifier = Modifier.fillMaxWidth().padding(15.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp)
                 ){
                     Text(
                         text = "Visit our website!",
@@ -112,7 +120,8 @@ fun FlightDetailsCard(flight: Flight){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp),
+                .padding(15.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
             TextWithIcon(text = " From: ", "${flight.cityFrom} (${flight.countryFrom}) - ${flight.flyFrom}",
@@ -131,8 +140,24 @@ fun FlightDetailsCard(flight: Flight){
                 icon = Icons.Default.Today)
             TextWithIcon(text = " Arrival: ", "${DateUtils.getHour(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)} ${DateUtils.getDate(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)}",
                 icon = Icons.Default.Event)
-            TextWithIcon(text = " Flights to destination: ", "${flight.route}",
+            TextWithIcon(text = " Flights to destination: ", "${flight.route.airlines.size}",
                 icon = Icons.Default.ConnectingAirports)
+
+            Row(
+                modifier = Modifier.padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+
+            ) {
+                flight.route.airlines.forEach {
+                    SubcomposeAsyncImage(
+                        model = "https://images.kiwi.com/airlines/64x64/$it.png",
+                        contentDescription = null,
+                        loading = { CircularProgressIndicator() },
+                        modifier = Modifier.padding(horizontal = 10.dp)
+                    )
+                }
+            }
+
             TextWithIcon(text = " Flight duration: ", flight.duration,
                 icon = Icons.Default.Schedule)
             TextWithIcon(text = " Distance traveled: ", "${flight.distance}km",

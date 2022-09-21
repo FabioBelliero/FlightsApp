@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flights.data.FlightRepository
+import com.example.flights.data.local.Airlines
 import com.example.flights.data.local.Flight
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,7 +24,8 @@ class MainViewModel(
     private val repository: FlightRepository
 ) : ViewModel(){
 
-    var selected: Flight = Flight("0",  "", "", "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, 0, "")
+    var selected: Flight = Flight("0",  "", "", "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, Airlines(
+        emptyList()), "")
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state : StateFlow<HomeScreenState>
