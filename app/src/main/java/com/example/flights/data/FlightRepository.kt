@@ -73,9 +73,13 @@ class FlightRepository(
             } else {
                 //Branch change
                 val airlines = mutableListOf<String>()
+                var destination = ""
                 val route = randFlight.getJSONArray("route")
                 for (i in 0 until route.length()){
                     airlines.add(route.getJSONObject(i).getString("airline"))
+                    if (i == route.length()-1){
+                        destination = route.getJSONObject(i).getString("mapIdto")
+                    }
                 }
 
                 val f = Flight(
@@ -97,6 +101,7 @@ class FlightRepository(
 
                     //Branch change
                     Airlines(airlines),
+                    destination,
 
                     randFlight.getString("deep_link")
                 )

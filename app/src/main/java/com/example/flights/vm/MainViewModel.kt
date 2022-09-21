@@ -24,8 +24,7 @@ class MainViewModel(
     private val repository: FlightRepository
 ) : ViewModel(){
 
-    var selected: Flight = Flight("0",  "", "", "", "", "", "", "", "", 0, 0, 0.0, "", 0.0, 0, Airlines(
-        emptyList()), "")
+    lateinit var selected: Flight
 
     private val _state = MutableStateFlow(HomeScreenState())
     val state : StateFlow<HomeScreenState>

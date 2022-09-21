@@ -26,6 +26,7 @@ class Flight(
     @ColumnInfo var price: Double,
     @ColumnInfo var availabilty: Int?,
     @ColumnInfo var route: Airlines,
+    @ColumnInfo var destinationId: String,
     @ColumnInfo var link: String,
 ){}
 

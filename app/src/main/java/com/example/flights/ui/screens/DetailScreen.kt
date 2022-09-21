@@ -124,6 +124,21 @@ fun FlightDetailsCard(flight: Flight){
                 .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
+
+            SubcomposeAsyncImage(
+                model = "https://images.kiwi.com/photos/600x330/${flight.destinationId}.jpg",
+                contentDescription = null,
+                loading = { CircularProgressIndicator() },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                thickness = 1.dp
+            )
+
             TextWithIcon(text = " From: ", "${flight.cityFrom} (${flight.countryFrom}) - ${flight.flyFrom}",
                 icon = Icons.Default.FlightTakeoff)
             TextWithIcon(text = " To: ", "${flight.cityTo} (${flight.countryTo}) - ${flight.flyTo}",
