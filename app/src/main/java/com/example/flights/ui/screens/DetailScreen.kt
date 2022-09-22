@@ -10,6 +10,8 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -20,6 +22,7 @@ import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
@@ -51,7 +54,12 @@ fun DetailScreen(
 @Composable
 fun DetailContent(nav: NavHostController){
     val flight = vm.selected
+    val showAlert = remember { mutableStateOf(false) }
 
+    if (showAlert.value){
+        MidnightAlert(nav = nav)
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -93,7 +101,14 @@ fun DetailContent(nav: NavHostController){
                 val handler = LocalUriHandler.current
                 
                 Button(
-                    onClick = { handler.openUri(flight.link) },
+                    onClick = {
+                        if (vm.midnight){
+                            showAlert.value = true
+                        }else {
+                            handler.openUri(flight.link)
+                        }
+
+                              },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(15.dp)
@@ -222,5 +237,24 @@ fun TextWithIcon(text: String, content: String, icon: ImageVector){
                 Icon(imageVector = icon, contentDescription = null)
             })
         )
+    )
+}
+
+@Composable
+fun MidnightAlert(nav: NavHostController){
+    AlertDialog(
+        onDismissRequest = {
+            vm.midnight = false
+            nav.popBackStack()
+                           },
+        confirmButton = {
+            TextButton(onClick = {
+                vm.midnight = false
+                nav.popBackStack()
+            }) {
+                Text(text = "OK")
+            }
+        },
+        text = { Text(text = "The current flight offer has expired. You will  be sent back to the home page")}
     )
 }
