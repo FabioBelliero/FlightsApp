@@ -24,6 +24,7 @@ N.B. This branch is used to realize some extra features done after the submition
 - Added airlines images in the detail screen
 - Added destination image in the detail screen
 - Added animation when going into the detail screen
+- Added check every midnight
 
 ## Setup applications
 1. Download and install Android Studio
