@@ -30,7 +30,7 @@ class ApiDataSource(private val context: Context) {
             { response ->
                 Log.d("Volley", "API Responding")
 
-                callbackSuccess(callback, response.getJSONArray("data"))
+                callback.onSuccess(response.getJSONArray("data"))
             },
             { error ->
                 Log.d("Volley", "Error: $error")
@@ -39,10 +39,6 @@ class ApiDataSource(private val context: Context) {
         )
 
         queue.add(jsonObjectRequest)
-    }
-
-    private fun callbackSuccess(callback: VolleyCallback, array: JSONArray) = runBlocking {
-        launch { callback.onSuccess(array) }
     }
 
 }

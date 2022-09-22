@@ -1,6 +1,7 @@
 package com.example.flights.data
 
 import android.util.Log
+import com.example.flights.data.local.Airlines
 import com.example.flights.data.local.Flight
 import com.example.flights.data.local.FlightsDAO
 import kotlinx.coroutines.coroutineScope
@@ -55,7 +56,11 @@ class FlightRepository(
         }
     }
 
-    override suspend fun onSuccess(flightList: JSONArray){
+    override fun onSuccess(flightList: JSONArray) = runBlocking {
+        getValidFlights(flightList)
+    }
+
+    private suspend fun getValidFlights(flightList: JSONArray){
         val validFlights = mutableListOf<Flight>()
         var rand: Int
 
@@ -66,6 +71,17 @@ class FlightRepository(
             if (ids.contains(randFlight.getString("id"))) {
                 flightList.remove(rand)
             } else {
+                //Branch change
+                val airlines = mutableListOf<String>()
+                var destination = ""
+                val route = randFlight.getJSONArray("route")
+                for (i in 0 until route.length()){
+                    airlines.add(route.getJSONObject(i).getString("airline"))
+                    if (i == route.length()-1){
+                        destination = route.getJSONObject(i).getString("mapIdto")
+                    }
+                }
+
                 val f = Flight(
                     randFlight.getString("id"),
                     randFlight.getString("flyFrom"),
@@ -82,7 +98,11 @@ class FlightRepository(
                     randFlight.getString("fly_duration"),
                     randFlight.getDouble("price"),
                     randFlight.getJSONObject("availability").optInt("seats", 0),
-                    randFlight.getJSONArray("route").length(),
+
+                    //Branch change
+                    Airlines(airlines),
+                    destination,
+
                     randFlight.getString("deep_link")
                 )
                 flightList.remove(rand)
@@ -95,7 +115,6 @@ class FlightRepository(
         _stateFlow.value = validFlights
 
         newFlightsInDB(validFlights)
-
     }
 
     private suspend fun newFlightsInDB(flights: List<Flight>) = coroutineScope {
@@ -126,6 +145,6 @@ class FlightRepository(
 
 //Interface to get the result from the volley call
 interface VolleyCallback {
-    suspend fun onSuccess(flightList: JSONArray)
+    fun onSuccess(flightList: JSONArray)
     fun onError()
 }

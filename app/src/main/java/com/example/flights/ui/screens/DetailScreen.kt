@@ -1,21 +1,31 @@
 package com.example.flights.ui.screens
 
+import android.icu.number.Scale
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.*
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavHostController
+import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import com.example.flights.data.local.Flight
 import com.example.flights.utils.DateUtils
 import com.example.flights.vm.MainViewModel
@@ -44,7 +54,12 @@ fun DetailScreen(
 @Composable
 fun DetailContent(nav: NavHostController){
     val flight = vm.selected
+    val showAlert = remember { mutableStateOf(false) }
 
+    if (showAlert.value){
+        MidnightAlert(nav = nav)
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(
@@ -86,8 +101,17 @@ fun DetailContent(nav: NavHostController){
                 val handler = LocalUriHandler.current
                 
                 Button(
-                    onClick = { handler.openUri(flight.link) },
-                    modifier = Modifier.fillMaxWidth().padding(15.dp)
+                    onClick = {
+                        if (vm.midnight){
+                            showAlert.value = true
+                        }else {
+                            handler.openUri(flight.link)
+                        }
+
+                              },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(15.dp)
                 ){
                     Text(
                         text = "Visit our website!",
@@ -112,9 +136,26 @@ fun FlightDetailsCard(flight: Flight){
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(15.dp),
+                .padding(15.dp)
+                .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.Start
         ) {
+
+            SubcomposeAsyncImage(
+                model = "https://images.kiwi.com/photos/600x330/${flight.destinationId}.jpg",
+                contentDescription = null,
+                loading = { CircularProgressIndicator() },
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+
+            Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
+                thickness = 1.dp
+            )
+
             TextWithIcon(text = " From: ", "${flight.cityFrom} (${flight.countryFrom}) - ${flight.flyFrom}",
                 icon = Icons.Default.FlightTakeoff)
             TextWithIcon(text = " To: ", "${flight.cityTo} (${flight.countryTo}) - ${flight.flyTo}",
@@ -131,8 +172,25 @@ fun FlightDetailsCard(flight: Flight){
                 icon = Icons.Default.Today)
             TextWithIcon(text = " Arrival: ", "${DateUtils.getHour(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)} ${DateUtils.getDate(flight.arrivalTime, flight.countryCodeTo, flight.cityTo)}",
                 icon = Icons.Default.Event)
-            TextWithIcon(text = " Flights to destination: ", "${flight.route}",
+            TextWithIcon(text = " Flights to destination: ", "${flight.route.airlines.size}",
                 icon = Icons.Default.ConnectingAirports)
+
+            Row(
+                modifier = Modifier.padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+
+            ) {
+                flight.route.airlines.forEach {
+                    SubcomposeAsyncImage(
+                        model = "https://images.kiwi.com/airlines/64x64/$it.png",
+                        contentDescription = null,
+                        loading = { CircularProgressIndicator() },
+                        modifier = Modifier.padding(horizontal = 10.dp),
+                        contentScale = ContentScale.Crop
+                    )
+                }
+            }
+
             TextWithIcon(text = " Flight duration: ", flight.duration,
                 icon = Icons.Default.Schedule)
             TextWithIcon(text = " Distance traveled: ", "${flight.distance}km",
@@ -179,5 +237,24 @@ fun TextWithIcon(text: String, content: String, icon: ImageVector){
                 Icon(imageVector = icon, contentDescription = null)
             })
         )
+    )
+}
+
+@Composable
+fun MidnightAlert(nav: NavHostController){
+    AlertDialog(
+        onDismissRequest = {
+            vm.midnight = false
+            nav.popBackStack()
+                           },
+        confirmButton = {
+            TextButton(onClick = {
+                vm.midnight = false
+                nav.popBackStack()
+            }) {
+                Text(text = "OK")
+            }
+        },
+        text = { Text(text = "The current flight offer has expired. You will  be sent back to the home page")}
     )
 }
